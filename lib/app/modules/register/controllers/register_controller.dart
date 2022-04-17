@@ -19,7 +19,12 @@ class RegisterController extends GetxController {
                 email: emailC.text, password: passC.text);
         print(userCredential);
         isLoading.value = false;
-        Get.offAllNamed(Routes.HOME);
+
+        // Kirim Email Verifikasi
+        await  userCredential.user!.sendEmailVerification();
+        // pindah halaman
+        Get.offAllNamed(Routes.LOGIN);
+        // auth
       } on FirebaseAuthException catch (e) {
         isLoading.value = false;
         print(e.code);

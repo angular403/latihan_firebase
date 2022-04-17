@@ -1,5 +1,6 @@
 // import
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:latihan_firebase/app/routes/app_pages.dart';
@@ -18,13 +19,51 @@ class LoginController extends GetxController {
     if (emailC.text.isNotEmpty && passC.text.isNotEmpty) {
       try {
         isLoading.value = true;
-        final credential = await auth.signInWithEmailAndPassword(
+        final userCredential = await auth.signInWithEmailAndPassword(
             email: emailC.text, password: passC.text);
         // print
-        print(credential);
+        print(userCredential);
         isLoading.value = false;
+        if (userCredential.user!.emailVerified == true) {
+          Get.offAllNamed(Routes.HOME);
+        } else {
+          print("User Belum Terverifikasi dan tidak dapat login");
+          Get.defaultDialog(
+              title: "Belum verifikasi",
+              middleText:
+                  "Apakah Kamu ingin mengirim email verifikasi kembali ? ",
+                  backgroundColor: Colors.amber,
+              actions: [
+                OutlinedButton(
+                  onPressed: () => Get.back(), // Menutup Dialog
+                  child: Text(
+                    "TIDAK",
+                  ),
+                ),
+                // button iya
+                ElevatedButton(
+                  onPressed: () async {
+                    // Kirim Ulang email verifikasi
+                    try {
+                      await userCredential.user!.sendEmailVerification();
+                      Get.back(); // tutup dialog
+                      print("Berhasil mengirim email verifikasi");
+                      Get.snackbar("BERHASIL",
+                          "kami telah mengirim email verifikasi. Buka email anda untuk tahap verifikasi.", backgroundColor: Colors.green);
+                    } catch (e) {
+                      print(e);
+                      Get.back(); // tutup dialog
+                      Get.snackbar("ERROR",
+                          "Kamu terlalu banyak mengirim email verifikasi.", backgroundColor: Colors.green);
+                    }
+                  },
+                  child: Text(
+                    "KIRIM LAGI",
+                  ),
+                ),
+              ]);
+        }
         // routes
-        Get.offAllNamed(Routes.HOME);
         // Firebase
       } on FirebaseAuthException catch (e) {
         isLoading.value = false;
