@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:latihan_firebase/app/routes/app_pages.dart';
 
-import '../controllers/login_controller.dart';
-import '../../login/controllers/login_controller.dart';
+import '../controllers/register_controller.dart';
 
-class LoginView extends GetView<LoginController> {
+class RegisterView extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Register'),
         centerTitle: true,
       ),
       body: ListView(
@@ -47,13 +45,13 @@ class LoginView extends GetView<LoginController> {
             () => ElevatedButton.icon(
               onPressed: () {
                 if (controller.isLoading.isFalse) {
-                  // eksekusi login
-                  controller.login();
+                  // eksekusi register
+                  controller.register();
                 }
               },
               icon: Icon(Icons.login_outlined),
               label:
-                  Text(controller.isLoading.isFalse ? "LOGIN" : "LOADING...."),
+                  Text(controller.isLoading.isFalse ? "REGISTER" : "LOADING...."),
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(MediaQuery.of(context).size.width, 50),
                 primary: Colors.red[900],
@@ -61,7 +59,7 @@ class LoginView extends GetView<LoginController> {
             ),
 
           ),
-          TextButton(onPressed: () => Get.toNamed(Routes.REGISTER), child: Text("Register")),
+        
         ],
       ),
     );

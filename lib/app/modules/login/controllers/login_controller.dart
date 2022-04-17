@@ -15,20 +15,21 @@ class LoginController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   // login
   void login() async {
-    try {
-      isLoading.value = true;
-      final credential = await auth.signInWithEmailAndPassword(
-          email: emailC.text, password: passC.text);
-      // print
-      print(credential);
-      isLoading.value = false;
-      // routes
-      Get.offAllNamed(Routes.HOME);
-      // Firebase
-    } on FirebaseAuthException catch (e) {
-      isLoading.value = false;
-      print(e.code);
-
+    if (emailC.text.isNotEmpty && passC.text.isNotEmpty) {
+      try {
+        isLoading.value = true;
+        final credential = await auth.signInWithEmailAndPassword(
+            email: emailC.text, password: passC.text);
+        // print
+        print(credential);
+        isLoading.value = false;
+        // routes
+        Get.offAllNamed(Routes.HOME);
+        // Firebase
+      } on FirebaseAuthException catch (e) {
+        isLoading.value = false;
+        print(e.code);
+      }
     }
   }
 }
