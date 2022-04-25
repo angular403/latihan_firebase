@@ -14,11 +14,16 @@ class LoginController extends GetxController {
   TextEditingController passC = TextEditingController(text: "password");
 
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  void errMsg(String msg) {
+    Get.snackbar("Terjadi Kesalahan", msg);
+  }
+
   // login
   void login() async {
     if (emailC.text.isNotEmpty && passC.text.isNotEmpty) {
+      isLoading.value = true;
       try {
-        isLoading.value = true;
         final userCredential = await auth.signInWithEmailAndPassword(
             email: emailC.text, password: passC.text);
         // print
@@ -32,7 +37,7 @@ class LoginController extends GetxController {
               title: "Belum verifikasi",
               middleText:
                   "Apakah Kamu ingin mengirim email verifikasi kembali ? ",
-                  backgroundColor: Colors.amber,
+              backgroundColor: Colors.amber,
               actions: [
                 OutlinedButton(
                   onPressed: () => Get.back(), // Menutup Dialog
@@ -49,12 +54,13 @@ class LoginController extends GetxController {
                       Get.back(); // tutup dialog
                       print("Berhasil mengirim email verifikasi");
                       Get.snackbar("BERHASIL",
-                          "kami telah mengirim email verifikasi. Buka email anda untuk tahap verifikasi.", backgroundColor: Colors.green);
+                          "kami telah mengirim email verifikasi. Buka email anda untuk tahap verifikasi.",
+                          backgroundColor: Colors.green);
                     } catch (e) {
                       print(e);
                       Get.back(); // tutup dialog
-                      Get.snackbar("ERROR",
-                          "Kamu terlalu banyak mengirim email verifikasi.", backgroundColor: Colors.green);
+                      errMsg( "Kamu terlalu banyak mengirim email verifikasi.");
+                   
                     }
                   },
                   child: Text(
@@ -68,7 +74,10 @@ class LoginController extends GetxController {
       } on FirebaseAuthException catch (e) {
         isLoading.value = false;
         print(e.code);
+        errMsg("${e.code}");
       }
+    } else {
+      errMsg("Email & Password harus Diisi.");
     }
   }
 }

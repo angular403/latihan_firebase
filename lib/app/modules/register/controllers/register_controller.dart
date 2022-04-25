@@ -9,6 +9,11 @@ class RegisterController extends GetxController {
   TextEditingController passC = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  void errMsg(String msg) {
+    Get.snackbar("TERJADI KESALAHAN", msg);
+  }
+
   // register
   void register() async {
     isLoading.value = true;
@@ -21,17 +26,21 @@ class RegisterController extends GetxController {
         isLoading.value = false;
 
         // Kirim Email Verifikasi
-        await  userCredential.user!.sendEmailVerification();
+        await userCredential.user!.sendEmailVerification();
         // pindah halaman
         Get.offAllNamed(Routes.LOGIN);
         // auth
       } on FirebaseAuthException catch (e) {
         isLoading.value = false;
         print(e.code);
+        errMsg("${e.code}");
       } catch (e) {
         isLoading.value = false;
         print(e);
+        errMsg("${e}");
       }
+    } else {
+      errMsg("Email Dan Password Harus Diisi");
     }
   }
 }
