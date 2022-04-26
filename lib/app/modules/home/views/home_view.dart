@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:latihan_firebase/app/routes/app_pages.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -12,7 +13,8 @@ class HomeView extends GetView<HomeController> {
         title: Text('Home'),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () => controller.logout(), icon: Icon(Icons.logout)),
+          IconButton(
+              onPressed: () => Get.toNamed(Routes.PROFILE), icon: Icon(Icons.person)),
         ],
       ),
       body: Center(
@@ -21,6 +23,8 @@ class HomeView extends GetView<HomeController> {
           style: TextStyle(fontSize: 20),
         ),
       ),
+      floatingActionButton:
+          FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
     );
   }
 }

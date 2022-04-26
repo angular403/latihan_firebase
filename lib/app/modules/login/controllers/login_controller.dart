@@ -19,7 +19,7 @@ class LoginController extends GetxController {
   final box = GetStorage();
   // error message
   void errMsg(String msg) {
-    Get.snackbar("Terjadi Kesalahan", msg);
+    Get.snackbar("Terjadi Kesalahan", msg, backgroundColor: Colors.green);
   }
 
   // login
@@ -37,7 +37,7 @@ class LoginController extends GetxController {
             await box.remove("rememberme");
           }
           if (rememberme.isTrue) {
-          await  box.write("rememberme", {
+            await box.write("rememberme", {
               "email": emailC.text,
               "password": passC.text,
             });

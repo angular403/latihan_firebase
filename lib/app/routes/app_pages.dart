@@ -4,6 +4,8 @@ import 'package:latihan_firebase/app/modules/home/bindings/home_binding.dart';
 import 'package:latihan_firebase/app/modules/home/views/home_view.dart';
 import 'package:latihan_firebase/app/modules/login/bindings/login_binding.dart';
 import 'package:latihan_firebase/app/modules/login/views/login_view.dart';
+import 'package:latihan_firebase/app/modules/profile/bindings/profile_binding.dart';
+import 'package:latihan_firebase/app/modules/profile/views/profile_view.dart';
 import 'package:latihan_firebase/app/modules/register/bindings/register_binding.dart';
 import 'package:latihan_firebase/app/modules/register/views/register_view.dart';
 import 'package:latihan_firebase/app/modules/reset_password/bindings/reset_password_binding.dart';
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.RESET_PASSWORD,
       page: () => ResetPasswordView(),
       binding: ResetPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

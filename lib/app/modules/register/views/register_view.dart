@@ -15,11 +15,37 @@ class RegisterView extends GetView<RegisterController> {
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [
+          // TextField Name
+          TextField(
+            controller: controller.nameC,
+            autocorrect: false,
+            textInputAction: TextInputAction.done,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.person_add),
+              labelText: "Name",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          SizedBox(height: 20),
+          // TextField Phone
+          TextField(
+            controller: controller.phoneC,
+            autocorrect: false,
+            textInputAction: TextInputAction.done,
+            keyboardType:  TextInputType.phone,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.phone),
+              labelText: "Phone",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          SizedBox(height: 20),
           // TextField Email
           TextField(
             controller: controller.emailC,
             autocorrect: false,
             textInputAction: TextInputAction.done,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.email),
               labelText: "Email",
@@ -38,7 +64,9 @@ class RegisterView extends GetView<RegisterController> {
                 prefixIcon: Icon(Icons.lock),
                 suffixIcon: IconButton(
                   onPressed: () => controller.isHidden.toggle(),
-                  icon: Icon(controller.isHidden.isTrue ?  Icons.remove_red_eye : Icons.visibility_off),
+                  icon: Icon(controller.isHidden.isTrue
+                      ? Icons.remove_red_eye
+                      : Icons.visibility_off),
                 ),
                 labelText: "Password",
                 border: OutlineInputBorder(),
