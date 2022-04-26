@@ -1,20 +1,23 @@
 // import
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:latihan_firebase/app/routes/app_pages.dart';
 
 // class controller
 class LoginController extends GetxController {
   RxBool isLoading = false.obs;
-
-  TextEditingController emailC =
-      TextEditingController(text: "andrew@gmail.com");
-  TextEditingController passC = TextEditingController(text: "password");
+  RxBool rememberme = false.obs;
+  RxBool isHidden = true.obs;
+  TextEditingController emailC = TextEditingController();
+  TextEditingController passC = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  final box = GetStorage();
+  // error message
   void errMsg(String msg) {
     Get.snackbar("Terjadi Kesalahan", msg);
   }
@@ -30,6 +33,15 @@ class LoginController extends GetxController {
         print(userCredential);
         isLoading.value = false;
         if (userCredential.user!.emailVerified == true) {
+          if (box.read("rememberme") != null) {
+            await box.remove("rememberme");
+          }
+          if (rememberme.isTrue) {
+          await  box.write("rememberme", {
+              "email": emailC.text,
+              "password": passC.text,
+            });
+          }
           Get.offAllNamed(Routes.HOME);
         } else {
           print("User Belum Terverifikasi dan tidak dapat login");
@@ -59,8 +71,7 @@ class LoginController extends GetxController {
                     } catch (e) {
                       print(e);
                       Get.back(); // tutup dialog
-                      errMsg( "Kamu terlalu banyak mengirim email verifikasi.");
-                   
+                      errMsg("Kamu terlalu banyak mengirim email verifikasi.");
                     }
                   },
                   child: Text(

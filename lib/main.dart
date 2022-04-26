@@ -5,6 +5,7 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,7 @@ void main() async {
   );
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  await GetStorage.init();
   runApp(
     StreamBuilder<User?>(
         stream: auth.authStateChanges(),
@@ -22,7 +24,9 @@ void main() async {
           }
           return GetMaterialApp(
             title: "Application",
-            initialRoute: snap.data != null && snap.data!.emailVerified == true ? Routes.HOME : Routes.LOGIN,
+            initialRoute: snap.data != null && snap.data!.emailVerified == true
+                ? Routes.HOME
+                : Routes.LOGIN,
             getPages: AppPages.routes,
           );
         }),

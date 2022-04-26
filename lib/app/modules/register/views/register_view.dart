@@ -7,7 +7,7 @@ import '../controllers/register_controller.dart';
 class RegisterView extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text('Register'),
         centerTitle: true,
@@ -28,15 +28,21 @@ class RegisterView extends GetView<RegisterController> {
           ),
           SizedBox(height: 20),
           // TextField Password
-          TextField(
-            controller: controller.passC,
-            autocorrect: false,
-            textInputAction: TextInputAction.done,
-            obscureText: true,
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              labelText: "Password",
-              border: OutlineInputBorder(),
+          Obx(
+            () => TextField(
+              controller: controller.passC,
+              autocorrect: false,
+              textInputAction: TextInputAction.done,
+              obscureText: controller.isHidden.value,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  onPressed: () => controller.isHidden.toggle(),
+                  icon: Icon(controller.isHidden.isTrue ?  Icons.remove_red_eye : Icons.visibility_off),
+                ),
+                labelText: "Password",
+                border: OutlineInputBorder(),
+              ),
             ),
           ),
           SizedBox(height: 30),
@@ -50,16 +56,14 @@ class RegisterView extends GetView<RegisterController> {
                 }
               },
               icon: Icon(Icons.login_outlined),
-              label:
-                  Text(controller.isLoading.isFalse ? "REGISTER" : "LOADING...."),
+              label: Text(
+                  controller.isLoading.isFalse ? "REGISTER" : "LOADING...."),
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(MediaQuery.of(context).size.width, 50),
                 primary: Colors.red[900],
               ),
             ),
-
           ),
-        
         ],
       ),
     );

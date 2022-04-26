@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:latihan_firebase/app/routes/app_pages.dart';
 
 import '../controllers/login_controller.dart';
 import '../../login/controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
+  final box = GetStorage();
   @override
   Widget build(BuildContext context) {
+    if (box.read("rememberme") != null) {
+      controller.emailC.text = box.read("rememberme")["email"];
+      controller.passC.text = box.read("rememberme")["password"];
+      controller.rememberme.value = true;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -21,7 +28,9 @@ class LoginView extends GetView<LoginController> {
           TextField(
             controller: controller.emailC,
             autocorrect: false,
-            textInputAction: TextInputAction.done,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            autofocus: true,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.email),
               labelText: "Email",
@@ -30,18 +39,29 @@ class LoginView extends GetView<LoginController> {
           ),
           SizedBox(height: 20),
           // TextField Password
-          TextField(
-            controller: controller.passC,
-            autocorrect: false,
-            textInputAction: TextInputAction.done,
-            obscureText: true,
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              labelText: "Password",
-              border: OutlineInputBorder(),
-            ),
-          ),
-          SizedBox(height: 20),
+          Obx(() => TextField(
+                controller: controller.passC,
+                autocorrect: false,
+                textInputAction: TextInputAction.done,
+                obscureText: controller.isHidden.value,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                      onPressed: () => controller.isHidden.toggle(),
+                      icon: Icon(controller.isHidden.isTrue
+                          ? Icons.remove_red_eye
+                          : Icons.visibility_off)),
+                  labelText: "Password",
+                  border: OutlineInputBorder(),
+                ),
+              )),
+          // SizedBox(height: 20),
+          Obx(() => CheckboxListTile(
+                value: controller.rememberme.value,
+                onChanged: (_) => controller.rememberme.toggle(),
+                title: Text("Remember me"),
+                controlAffinity: ListTileControlAffinity.leading,
+              )),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

@@ -5,6 +5,7 @@ import 'package:latihan_firebase/app/routes/app_pages.dart';
 
 class RegisterController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool isHidden = true.obs;
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
 
