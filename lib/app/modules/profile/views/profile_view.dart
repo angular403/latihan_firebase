@@ -79,6 +79,26 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
                 SizedBox(height: 20),
+                Obx(() => TextField(
+                      obscureText: controller.isHidden.value,
+                      controller: controller.passC,
+                      autocorrect: false,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () => controller.isHidden.toggle(),
+                          icon: Icon(controller.isHidden.isFalse
+                              ? Icons.remove_red_eye
+                              : Icons.visibility_off),
+                        ),
+                        prefixIcon: Icon(Icons.key),
+                        labelText: "New Password",
+                        border: OutlineInputBorder(),
+                      ),
+                    )),
+                SizedBox(height: 20),
                 Text("Created  At : ",
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 5),
