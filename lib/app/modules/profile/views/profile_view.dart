@@ -85,17 +85,27 @@ class ProfileView extends GetView<ProfileController> {
                 Text(
                     "${DateFormat.yMMMEd().add_jms().format(DateTime.parse(snapshot.data!["created_at"]))}"),
                 SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("UPDATE PROFILE", style: TextStyle(fontWeight: FontWeight.bold),),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red[900],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    fixedSize: Size(150, 50)
-                  ),
-                ),
+                Obx(() => ElevatedButton(
+                      onPressed: () {
+                        if (controller.isLoading.isFalse) {
+                          // eksekusi
+                          controller.updateProfile();
+                        }
+                      },
+                      child: Text(
+                        controller.isLoading.isFalse
+                            ? "UPDATE PROFILE"
+                            : "LOADING...",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red[900],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        fixedSize: Size(150, 50),
+                      ),
+                    )),
               ],
             );
           }
