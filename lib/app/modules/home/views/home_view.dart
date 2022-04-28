@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -18,12 +19,37 @@ class HomeView extends GetView<HomeController> {
               icon: Icon(Icons.person)),
         ],
       ),
-      body: Center(
-        child: Text(
-          'HomeView is working',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: controller.streamNotes(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(color: Colors.red),
+              );
+            }
+            if (snapshot.data?.docs.length == 0 || snapshot.data == null) {
+              return Center(
+                child: Text("DATA TIDAK ADA..."),
+              );
+            }
+            return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var docNote = snapshot.data!.docs[index];
+                  Map<String, dynamic> note = docNote.data();
+                  return ListTile(
+                    leading: CircleAvatar(
+                      child: Text("${index + 1}"),
+                    ),
+                    title: Text("${note['title']}"),
+                    subtitle: Text("${note['desc']}"),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.delete),
+                    ),
+                  );
+                });
+          }),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             Get.toNamed(Routes.ADD_NOTE);
