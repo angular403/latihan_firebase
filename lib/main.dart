@@ -23,6 +23,7 @@ void main() async {
             return SplashCreen();
           }
           return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
             title: "Application",
             initialRoute: snap.data != null && snap.data!.emailVerified == true
                 ? Routes.HOME

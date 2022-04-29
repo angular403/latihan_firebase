@@ -14,9 +14,26 @@ class HomeView extends GetView<HomeController> {
         title: Text('Home'),
         centerTitle: true,
         actions: [
-          IconButton(
-              onPressed: () => Get.toNamed(Routes.PROFILE),
-              icon: Icon(Icons.person)),
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: controller.streamProfile(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.grey[400],
+                  );
+                }
+                Map<String, dynamic>? data = snapshot.data!.data();
+                // Circle Avatar
+                return GestureDetector(
+                  onTap: () => Get.toNamed(Routes.PROFILE),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey[400],
+                    backgroundImage: NetworkImage(
+                      data?["profile"] != null ? data!["profile"].toString(): "https://ui-avatars.com/api/?name=${data!["name"]}"),
+                  ),
+                );
+              }),
+              SizedBox(width: 10),
         ],
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -38,7 +55,8 @@ class HomeView extends GetView<HomeController> {
                   var docNote = snapshot.data!.docs[index];
                   Map<String, dynamic> note = docNote.data();
                   return ListTile(
-                    onTap: () => Get.toNamed(Routes.EDIT_NOTE, arguments: docNote.id),
+                    onTap: () =>
+                        Get.toNamed(Routes.EDIT_NOTE, arguments: docNote.id),
                     leading: CircleAvatar(
                       child: Text("${index + 1}"),
                     ),
