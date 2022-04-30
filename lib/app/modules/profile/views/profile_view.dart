@@ -119,38 +119,39 @@ class ProfileView extends GetView<ProfileController> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        snapshot.data?["profile"] != null
-                            ? Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Colors.grey[400],
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            snapshot.data!["profile"]))),
+                        c.image != null
+                            ? Column(
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Colors.grey[400],
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image:
+                                              FileImage(File(c.image!.path))),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => c.resetImage(),
+                                    child: Text("Delete"),
+                                  ),
+                                ],
                               )
-                            : c.image != null
-                                ? Column(
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          color: Colors.grey[400],
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: FileImage(
-                                                  File(c.image!.path))),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => c.resetImage(),
-                                        child: Text("Delete"),
-                                      ),
-                                    ],
+                            : snapshot.data?["profile"] != null
+                                ? Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: Colors.grey[400],
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                                snapshot.data!["profile"]))),
                                   )
                                 : Text("Belum Ada Profile"),
                         TextButton(
@@ -161,7 +162,7 @@ class ProfileView extends GetView<ProfileController> {
                     );
                   },
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 15),
                 Obx(() => ElevatedButton(
                       onPressed: () {
                         if (controller.isLoading.isFalse) {
