@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latihan_firebase/app/routes/app_pages.dart';
+import 'package:firebase_storage/firebase_storage.dart' as s;
 
 // Class
 class ProfileController extends GetxController {
@@ -14,10 +16,12 @@ class ProfileController extends GetxController {
   TextEditingController emailC = TextEditingController();
   TextEditingController phoneC = TextEditingController();
   TextEditingController passC = TextEditingController();
+
   // instance
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
+  s.FirebaseStorage storage = s.FirebaseStorage.instance;
+  // XFILE
   XFile? image;
 
   // Image Picker
@@ -72,6 +76,19 @@ class ProfileController extends GetxController {
           "name": nameC.text,
           "phone": phoneC.text,
         });
+
+        if (image != null) {
+          String ext = image!.name.split(".").last;
+          await storage
+              .ref("$uid")
+              .child("profile.$ext")
+              .putFile(File(image!.path));
+          String profileUrl = await storage.ref("$uid").child("profile.$ext").getDownloadURL();
+                  await firestore.collection("users").doc(uid).update({
+          "profile": profileUrl,
+          
+        });
+        }
 
         if (passC.text.isNotEmpty) {
           // UPDATE PASSWORD
