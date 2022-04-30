@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -99,11 +101,66 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                     )),
                 SizedBox(height: 20),
-                Text("Created  At : ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  "Created  At : ",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 SizedBox(height: 5),
                 Text(
                     "${DateFormat.yMMMEd().add_jms().format(DateTime.parse(snapshot.data!["created_at"]))}"),
+                SizedBox(height: 20),
+                Text(
+                  "Profile : ",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                GetBuilder<ProfileController>(
+                  builder: (c) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        snapshot.data?["profile"] != null
+                            ? Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.grey[400],
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            snapshot.data!["profile"]))),
+                              )
+                            : c.image != null
+                                ? Column(
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: Colors.grey[400],
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: FileImage(
+                                                  File(c.image!.path))),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => c.resetImage(),
+                                        child: Text("Delete"),
+                                      ),
+                                    ],
+                                  )
+                                : Text("Belum Ada Profile"),
+                        TextButton(
+                          onPressed: () => controller.pickImage(),
+                          child: Text("Pilih"),
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 SizedBox(height: 30),
                 Obx(() => ElevatedButton(
                       onPressed: () {

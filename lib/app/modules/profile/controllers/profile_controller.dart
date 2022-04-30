@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latihan_firebase/app/routes/app_pages.dart';
 
 // Class
@@ -16,6 +17,25 @@ class ProfileController extends GetxController {
   // instance
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  XFile? image;
+
+  // Image Picker
+  void pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    // Pick an image
+    image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      update();
+    }
+  }
+
+  // reset image
+  void resetImage() {
+    image = null;
+    update();
+  }
+
   // void logout
   void logout() async {
     try {
