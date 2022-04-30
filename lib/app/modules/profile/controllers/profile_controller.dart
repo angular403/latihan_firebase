@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart' as s;
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isHidden = true.obs;
+  RxBool profile = false.obs;
   TextEditingController nameC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController phoneC = TextEditingController();
@@ -40,6 +41,23 @@ class ProfileController extends GetxController {
     update();
   }
 
+  // clear profile
+  void clearProfile() async {
+    try {
+      String uid = auth.currentUser!.uid;
+      await firestore.collection("users").doc(uid).update({
+        "profile": FieldValue.delete(),
+      });
+      Get.back();
+      profile.value = false;
+      update();
+    } catch (e) {
+      isLoading.value = false;
+      print(e);
+      Get.snackbar("TERJADI KESALAHAN", "TIDAK DAPAT MENGHAPUS PROFILE");
+    }
+  }
+
   // void logout
   void logout() async {
     try {
@@ -57,6 +75,8 @@ class ProfileController extends GetxController {
       String uid = auth.currentUser!.uid;
       DocumentSnapshot<Map<String, dynamic>> docUser =
           await firestore.collection("users").doc(uid).get();
+
+      profile.value = true;
       return docUser.data();
     } catch (e) {
       print(e);
@@ -83,11 +103,11 @@ class ProfileController extends GetxController {
               .ref("$uid")
               .child("profile.$ext")
               .putFile(File(image!.path));
-          String profileUrl = await storage.ref("$uid").child("profile.$ext").getDownloadURL();
-                  await firestore.collection("users").doc(uid).update({
-          "profile": profileUrl,
-          
-        });
+          String profileUrl =
+              await storage.ref("$uid").child("profile.$ext").getDownloadURL();
+          await firestore.collection("users").doc(uid).update({
+            "profile": profileUrl,
+          });
         }
 
         if (passC.text.isNotEmpty) {

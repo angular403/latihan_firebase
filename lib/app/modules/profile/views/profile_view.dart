@@ -140,18 +140,43 @@ class ProfileView extends GetView<ProfileController> {
                                   ),
                                 ],
                               )
-                            : snapshot.data?["profile"] != null
-                                ? Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: Colors.grey[400],
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(
-                                                snapshot.data!["profile"]))),
+                            : snapshot.data?["profile"] != null && c.profile.isTrue
+                                ? Column(
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: Colors.grey[400],
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(snapshot
+                                                    .data!["profile"]))),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Get.defaultDialog(
+                                            title: "Hapus Profil ?",
+                                            middleText:
+                                                "Apakah kamu yakin ingin menghapus foto profil ?",
+                                            actions: [
+                                              OutlinedButton(
+                                                onPressed: () => Get.back(),
+                                                child: Text("CANCEL"),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    c.clearProfile(),
+                                                child: Text("YES"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                        child: Text("Clear Profile"),
+                                      ),
+                                    ],
                                   )
                                 : Text("Belum Ada Profile"),
                         TextButton(
